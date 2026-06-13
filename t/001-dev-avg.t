@@ -13,8 +13,7 @@ BEGIN { use_ok('Stat::Acc') };
 
 #########################
 
-# Insert your test code below, the Test::More module is use()ed here so read
-# its man page ( perldoc Test::More ) for help writing this test script.
+binmode $_, ":utf8" foreach \*STDOUT, \*STDERR;
 
 my $acc = Stat::Acc->new();
 ok($acc);
