@@ -1,0 +1,9 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+lib/Stat/Acc.pm
+lib/Stat/Acc2.pm
+t/000-use.t
+t/001-dev-avg.t
+t/002-lin-reg.t

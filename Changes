@@ -1,0 +1,6 @@
+Revision history for Perl extension Stat::Acc.
+
+0.01  Fri Jun 12 12:37:36 2026
+	- original version; created by h2xs 1.23 with options
+		-AX --skip-exporter Stat::Acc
+
