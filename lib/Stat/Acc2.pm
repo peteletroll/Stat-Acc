@@ -9,23 +9,25 @@ use Stat::Acc;
 
 our $VERSION = '0.01';
 
+use constant {
+	X => 0,
+	Y => 1,
+	SXY => 2,
+};
+
 use overload
 	'""' => "stringify";
 
 sub new($) {
 	my ($pkg) = @_;
-	return bless {
-		x => Stat::Acc->new(),
-		y => Stat::Acc->new(),
-		SXY => 0,
-	}, $pkg
+	return bless [ Stat::Acc->new(), Stat::Acc->new(), 0 ], $pkg
 }
 
-sub n($) { $_[0]{x}->n }
+sub n($) { $_[0][X]->n }
 
-sub x($) { $_[0]{x} }
+sub x($) { $_[0][X] }
 
-sub y($) { $_[0]{y} }
+sub y($) { $_[0][Y] }
 
 sub add($@) {
 	my $self = shift;
@@ -34,7 +36,7 @@ sub add($@) {
 		my ($x, $y) = splice @_, 0, 2;
 		$self->x->add($x);
 		$self->y->add($y);
-		$self->{SXY} += $x * $y;
+		$self->[SXY] += $x * $y;
 	}
 	$self
 }
@@ -47,7 +49,7 @@ sub _d($) {
 
 sub slope($) {
 	my ($self) = @_;
-	($self->n * $self->{SXY} - $self->x->sum * $self->y->sum) / $self->_d
+	($self->n * $self->[SXY] - $self->x->sum * $self->y->sum) / $self->_d
 }
 
 sub intercept($) {
@@ -55,7 +57,7 @@ sub intercept($) {
 	my $sx = $self->x->sum;
 	my $sx2 = $self->x->sum_squared;
 	my $sy = $self->y->sum;
-	my $sxy = $self->{SXY};
+	my $sxy = $self->[SXY];
 	($sx2 * $sy - $sx * $sxy) / $self->_d
 }
 
