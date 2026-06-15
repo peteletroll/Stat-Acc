@@ -17,7 +17,7 @@ sub new($) {
 	return bless {
 		x => Stat::Acc->new(),
 		y => Stat::Acc->new(),
-		sxy => 0,
+		SXY => 0,
 	}, $pkg
 }
 
@@ -34,28 +34,28 @@ sub add($@) {
 		my ($x, $y) = splice @_, 0, 2;
 		$self->x->add($x);
 		$self->y->add($y);
-		$self->{sxy} += $x * $y;
+		$self->{SXY} += $x * $y;
 	}
 	$self
 }
 
 sub _d($) {
 	my ($self) = @_;
-	my $s = $self->x->{s};
-	$self->n * $self->x->{s2} - $s * $s
+	my $s = $self->x->sum;
+	$self->n * $self->x->sum_squared - $s * $s
 }
 
 sub slope($) {
 	my ($self) = @_;
-	($self->n * $self->{sxy} - $self->x->{s} * $self->y->{s}) / $self->_d
+	($self->n * $self->{SXY} - $self->x->sum * $self->y->sum) / $self->_d
 }
 
 sub intercept($) {
 	my ($self) = @_;
-	my $sx = $self->x->{s};
-	my $sx2 = $self->x->{s2};
-	my $sy = $self->y->{s};
-	my $sxy = $self->{sxy};
+	my $sx = $self->x->sum;
+	my $sx2 = $self->x->sum_squared;
+	my $sy = $self->y->sum;
+	my $sxy = $self->{SXY};
 	($sx2 * $sy - $sx * $sxy) / $self->_d
 }
 

@@ -5,35 +5,41 @@ use warnings;
 
 our $VERSION = '0.01';
 
+use constant {
+	N => 0,
+	MIN => 1,
+	MAX => 2,
+	S => 3,
+	S2 => 4,
+};
+
 use overload
 	'""' => "stringify";
 
 sub new($) {
 	my ($pkg) = @_;
-	return bless {
-		n => 0,
-		min => undef,
-		max => undef,
-		s => 0,
-		s2 => 0,
-	}, $pkg
+	return bless [ 0, undef, undef, 0, 0 ], $pkg
 }
 
-sub n($) { $_[0]{n} }
+sub n($) { $_[0][N] }
 
-sub min($) { $_[0]{min} }
+sub sum($) { $_[0][S] }
 
-sub max($) { $_[0]{max} }
+sub sum_squared($) { $_[0][S2] }
+
+sub min($) { $_[0][MIN] }
+
+sub max($) { $_[0][MAX] }
 
 sub add($@) {
 	my $self = shift;
 	foreach my $x (@_) {
 		$x += 0;
-		my $n = $self->{n}++;
-		$self->{s} += $x;
-		$self->{s2} += $x * $x;
-		(!$n || $self->{min} > $x) and $self->{min} = $x;
-		(!$n || $self->{max} < $x) and $self->{max} = $x;
+		my $n = $self->[N]++;
+		$self->[S] += $x;
+		$self->[S2] += $x * $x;
+		(!$n || $self->[MIN] > $x) and $self->[MIN] = $x;
+		(!$n || $self->[MAX] < $x) and $self->[MAX] = $x;
 	}
 	$self
 }
@@ -42,15 +48,15 @@ sub avg($) {
 	my ($self) = @_;
 	my $n = $self->n;
 	$n or return undef;
-	$self->{s} / $n
+	$self->[S] / $n
 }
 
 sub dev($) {
 	my ($self) = @_;
-	my $n = $self->{n};
+	my $n = $self->[N];
 	$n or return undef;
-	my $s = $self->{s};
-	my $s2 = $self->{s2};
+	my $s = $self->[S];
+	my $s2 = $self->[S2];
 	sqrt(($s2 - $s * $s / $n) / $n)
 }
 
